@@ -1,9 +1,10 @@
-package com.limark.open.gradle.plugins.semver.core.strategies.impl
+package com.limark.open.gradle.plugins.gitflowsemver.core.strategies.impl
 
-import com.limark.open.gradle.plugins.semver.core.GitClient
-import com.limark.open.gradle.plugins.semver.core.exceptions.NonComplianceException
-import com.limark.open.gradle.plugins.semver.core.model.Version
-import com.limark.open.gradle.plugins.semver.core.strategies.VersioningStrategy
+
+import com.limark.open.gradle.plugins.gitflowsemver.core.GitClient
+import com.limark.open.gradle.plugins.gitflowsemver.core.exceptions.NonComplianceException
+import com.limark.open.gradle.plugins.gitflowsemver.core.model.Version
+import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.VersioningStrategy
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

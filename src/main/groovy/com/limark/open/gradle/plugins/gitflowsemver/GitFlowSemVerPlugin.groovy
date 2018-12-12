@@ -11,11 +11,11 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-package com.limark.open.gradle.plugins.semver
+package com.limark.open.gradle.plugins.gitflowsemver
 
-import com.limark.open.gradle.plugins.semver.config.PluginConfig
-import com.limark.open.gradle.plugins.semver.core.GitClient
-import com.limark.open.gradle.plugins.semver.core.Versioner
+import com.limark.open.gradle.plugins.gitflowsemver.config.PluginConfig
+import com.limark.open.gradle.plugins.gitflowsemver.core.GitClient
+import com.limark.open.gradle.plugins.gitflowsemver.core.Versioner
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.WriteProperties

@@ -1,5 +1,23 @@
-import com.limark.open.gradle.plugins.semver.GitFlowSemVerPlugin
-import org.apache.tools.ant.filters.ReplaceTokens
+plugins {
+  id 'groovy'
+}
 
-apply plugin: GitFlowSemVerPlugin
+group = "com.limark.open.gradle.plugins"
 
+// Dog Fooding - We use the plugin to manage itself
+apply plugin: new GroovyScriptEngine(
+    [
+        file('src/main/groovy').absolutePath, 
+        file('src/main/resources').absolutePath
+    ].toArray(new String[2]),
+    this.class.classLoader
+).loadScriptByName('com/limark/open/gradle/plugins/gitflowsemver/GitFlowSemVerPlugin.groovy')
+
+dependencies {
+  implementation gradleApi()
+  implementation localGroovy()
+}
+
+jar {
+  baseName = "gitflow-semver"
+}

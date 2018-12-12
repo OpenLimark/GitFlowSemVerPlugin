@@ -11,10 +11,9 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-package com.limark.open.gradle.plugins.semver.core
+package com.limark.open.gradle.plugins.gitflowsemver.core
 
-import com.limark.open.gradle.plugins.semver.config.PluginConfig
-import com.limark.open.gradle.plugins.semver.core.model.Version
+import com.limark.open.gradle.plugins.gitflowsemver.config.PluginConfig
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

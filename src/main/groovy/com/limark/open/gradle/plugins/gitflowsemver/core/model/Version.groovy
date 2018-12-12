@@ -11,7 +11,7 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-package com.limark.open.gradle.plugins.semver.core.model
+package com.limark.open.gradle.plugins.gitflowsemver.core.model
 
 class Version {
   int major

@@ -11,7 +11,7 @@
  *                                                                                                                    *
  **********************************************************************************************************************/
 
-package com.limark.open.gradle.plugins.semver.config
+package com.limark.open.gradle.plugins.gitflowsemver.config
 
 class PluginConfig {
 

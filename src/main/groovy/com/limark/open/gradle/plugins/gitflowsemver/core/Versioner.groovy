@@ -1,13 +1,13 @@
-package com.limark.open.gradle.plugins.semver.core
+package com.limark.open.gradle.plugins.gitflowsemver.core
 
-import com.limark.open.gradle.plugins.semver.config.PluginConfig
-import com.limark.open.gradle.plugins.semver.core.exceptions.NonComplianceException
-import com.limark.open.gradle.plugins.semver.core.model.Version
-import com.limark.open.gradle.plugins.semver.core.strategies.VersioningStrategy
-import com.limark.open.gradle.plugins.semver.core.strategies.impl.DevelopBranchVersioningStrategy
-import com.limark.open.gradle.plugins.semver.core.strategies.impl.HotfixBranchVersioningStrategy
-import com.limark.open.gradle.plugins.semver.core.strategies.impl.MasterBranchVersioningStrategy
-import com.limark.open.gradle.plugins.semver.core.strategies.impl.ReleaseBranchVersioningStrategy
+import com.limark.open.gradle.plugins.gitflowsemver.config.PluginConfig
+import com.limark.open.gradle.plugins.gitflowsemver.core.exceptions.NonComplianceException
+import com.limark.open.gradle.plugins.gitflowsemver.core.model.Version
+import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.VersioningStrategy
+import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.impl.DevelopBranchVersioningStrategy
+import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.impl.HotfixBranchVersioningStrategy
+import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.impl.MasterBranchVersioningStrategy
+import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.impl.ReleaseBranchVersioningStrategy
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
