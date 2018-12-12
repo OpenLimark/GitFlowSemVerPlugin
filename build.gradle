@@ -28,4 +28,13 @@ pluginBundle {
   website = 'https://github.com/OpenLimark/GitFlowSemVerPlugin'
   vcsUrl = 'https://github.com/OpenLimark/GitFlowSemVerPlugin'
   tags = ['semver', 'gitflow','limark']
+
+  plugins {
+    gitFlowSemverPlugin {
+      id = 'com.limark.gitflowsemver'
+      displayName = 'GitFlow SemVer 2.0 Plugin'
+      description = "An opionionated GitFlow SemVer 2.0 versioning plugin that resolves project vesion based on Git Tags and conventions."
+      tags = ['semver', 'gitflow', 'limark']
+    }
+  }
 }
