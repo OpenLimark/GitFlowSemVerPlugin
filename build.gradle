@@ -1,0 +1,5 @@
+import com.limark.open.gradle.plugins.semver.GitFlowSemVerPlugin
+import org.apache.tools.ant.filters.ReplaceTokens
+
+apply plugin: GitFlowSemVerPlugin
+
