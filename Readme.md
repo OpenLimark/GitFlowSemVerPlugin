@@ -83,3 +83,8 @@ Above configuration does the following changes,
 * Instead of the `rc` identifier for release versions / hotfix versions, plugin will use `beta`.
 * The `gitDescribeMatchRule` allows you to customize how a release tag will be identified.
 * Using the `propertiesFile`, you can change the location where the `version.properties` file will be created. By default, it gets written to `${project.buildDir}/version.properties`. In the above example, it is changed to be inside the `META-INF` directory.
+
+## Integrations / Compatibility
+
+### GitFlow AVH 
+This plugin is fully compatible and tested with [GitFlow AVH Plugin](https://github.com/petervanderdoes/gitflow-avh) for Git.
