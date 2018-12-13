@@ -24,7 +24,6 @@ pipeline {
   }
 
   stages {
-
     stage('Build') {
       steps {
         sh "./gradlew --no-daemon clean build"
@@ -32,6 +31,12 @@ pipeline {
     }
 
     stage('Confirm-Publish') {
+      when {
+        anyOf {
+          // Publish only from master
+          branch 'master'
+        }
+      }
       steps {
         timeout(time: 5, unit: 'DAYS') {
           input message: 'Publish plugin?'
