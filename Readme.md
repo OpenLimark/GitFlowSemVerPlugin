@@ -87,4 +87,17 @@ Above configuration does the following changes,
 ## Integrations / Compatibility
 
 ### GitFlow AVH 
-This plugin is fully compatible and tested with [GitFlow AVH Plugin](https://github.com/petervanderdoes/gitflow-avh) for Git.
+
+This plugin is fully compatible and tested with [GitFlow AVH Plugin](https://github.com/petervanderdoes/gitflow-avh) for the standard GitFlow branches. 
+
+Currently, this plugin does not recognise `support` branches supported by the AVH Plugin. Support branches are not a branch type from the original GitFlow spec. This plugin may be extended to recognize `support` branches in a future release, if there's a demand for that.
+
+### Jenkins
+
+Please note that since v3.4.0 of Jenkins Git Plugin, the default SCM checkout of Jenkins will not fetch the tags (see [JENKINS-45164](https://issues.jenkins-ci.org/browse/JENKINS-45164) for more details). However, this plugin relies on tags being present so that we can track the last released version.  To address this issue, you need to configure your Jenkins jobs to fetch the tags when SCM checkout happens.  Below steps are for configuring a Jenkins multi-branch declarative pipelines project. Similar steps can be taken for other project types as well. 
+
+ 1. Go to your project configuration page in Jenkins. 
+ 2. Under 'Branch Sources', you should see a section called 'Behaviors'. Under this section, click 'Add' button and select 'Advance Clone Behaviors'. 
+ 3. If 'Fetch Tags' is not selected, select it. As of current version, when you add 'Advance Clone Behaviors', this automatically gets checked.
+
+Once above configuration change is done, Jenkins will fetch the tags during SCM checkout.
