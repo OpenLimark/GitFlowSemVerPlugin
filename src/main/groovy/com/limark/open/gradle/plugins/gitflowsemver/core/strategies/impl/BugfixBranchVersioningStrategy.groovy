@@ -19,61 +19,30 @@ package com.limark.open.gradle.plugins.gitflowsemver.core.strategies.impl
 
 import com.limark.open.gradle.plugins.gitflowsemver.config.PluginConfig
 import com.limark.open.gradle.plugins.gitflowsemver.core.GitClient
-import com.limark.open.gradle.plugins.gitflowsemver.core.exceptions.NonComplianceException
 import com.limark.open.gradle.plugins.gitflowsemver.core.model.Version
-import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.VersioningStrategy
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class DevelopBranchVersioningStrategy implements VersioningStrategy {
+class BugfixBranchVersioningStrategy extends DevelopBranchVersioningStrategy {
 
   private static final Logger log = LoggerFactory.getLogger(this.getClass())
 
-  GitClient gitClient
-  PluginConfig pluginConfig
-
-  DevelopBranchVersioningStrategy(GitClient gitClient, PluginConfig pluginConfig) {
-    this.gitClient = gitClient
-    this.pluginConfig = pluginConfig
+  BugfixBranchVersioningStrategy(GitClient gitClient, PluginConfig pluginConfig) {
+    super(gitClient, pluginConfig)
   }
-
 
   @Override
   boolean supports(String branch) {
-    return branch == "develop"
+    return branch.startsWith("bugfix/")
   }
 
   @Override
   Version resolve() {
-    def gitOutput = sanitizeGitOutput(gitClient.describeDirtyMatch())
-
-
-    def baseVersion = getBaseVersion(gitOutput)
-    def commits = getCommits(gitOutput)
-
-    return Version.parse("${baseVersion}-${pluginConfig.alphaLabel}.${commits}").incrementMinor(true)
+    Version version = super.resolve()
+    String uniqueBranchId = gitClient.getUniqueBranchId(gitClient.getBranchName().substring("bugfix/".length()))
+    version.setPreReleasePrefix("bugfix-${uniqueBranchId}")
+    version.setPreRelease(gitClient.getCommitsSince("develop") + 1)
+    return version
   }
 
-  protected String sanitizeGitOutput(String gitOutput) {
-    if ("".equals(gitOutput)) {
-      log.error("Compliance error - Unable to determine develop version as git describe did not return expected value")
-      throw new NonComplianceException("Unable to determine develop version as git describe did not return expected value")
-    }
-
-    if (gitOutput.endsWith("-dirty")) {
-      // Strip off the dirty indicator
-      gitOutput = gitOutput.substring(0, gitOutput.length() - "-dirty".length())
-    }
-
-    return gitOutput
-  }
-
-  protected String getBaseVersion(gitOutput) {
-    return (gitOutput =~ /-[0-9]+-g[0-9a-f]+$/).replaceFirst("")
-  }
-
-  protected String getCommits(gitOutput) {
-    def gitSuffixMatcher = (gitOutput =~ /-([0-9]+)-g([0-9a-f]+)$/)
-    return Integer.parseInt(gitSuffixMatcher[0][1].toString())
-  }
 }

@@ -21,10 +21,13 @@ import com.limark.open.gradle.plugins.gitflowsemver.config.PluginConfig
 import com.limark.open.gradle.plugins.gitflowsemver.core.exceptions.NonComplianceException
 import com.limark.open.gradle.plugins.gitflowsemver.core.model.Version
 import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.VersioningStrategy
+import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.impl.BugfixBranchVersioningStrategy
 import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.impl.DevelopBranchVersioningStrategy
+import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.impl.FeatureBranchVersioningStrategy
 import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.impl.HotfixBranchVersioningStrategy
 import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.impl.MasterBranchVersioningStrategy
 import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.impl.ReleaseBranchVersioningStrategy
+import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.impl.UnknownBranchVersioningStrategy
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -41,7 +44,10 @@ class Versioner {
         new MasterBranchVersioningStrategy(gitClient),
         new ReleaseBranchVersioningStrategy(gitClient, config),
         new HotfixBranchVersioningStrategy(gitClient, config),
-        new DevelopBranchVersioningStrategy(gitClient, config)
+        new DevelopBranchVersioningStrategy(gitClient, config),
+        new FeatureBranchVersioningStrategy(gitClient, config),
+        new BugfixBranchVersioningStrategy(gitClient, config),
+        new UnknownBranchVersioningStrategy(gitClient, config) // Should be the last strategy
     ]
   }
 

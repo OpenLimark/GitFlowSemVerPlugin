@@ -25,55 +25,29 @@ import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.VersioningSt
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class DevelopBranchVersioningStrategy implements VersioningStrategy {
+/**
+ * Versioning strategy for unknown branches.
+ */
+class UnknownBranchVersioningStrategy extends DevelopBranchVersioningStrategy {
 
   private static final Logger log = LoggerFactory.getLogger(this.getClass())
 
-  GitClient gitClient
-  PluginConfig pluginConfig
-
-  DevelopBranchVersioningStrategy(GitClient gitClient, PluginConfig pluginConfig) {
-    this.gitClient = gitClient
-    this.pluginConfig = pluginConfig
+  UnknownBranchVersioningStrategy(GitClient gitClient, PluginConfig pluginConfig) {
+    super(gitClient, pluginConfig)
   }
 
 
   @Override
   boolean supports(String branch) {
-    return branch == "develop"
+    return true
   }
 
   @Override
   Version resolve() {
-    def gitOutput = sanitizeGitOutput(gitClient.describeDirtyMatch())
-
-
-    def baseVersion = getBaseVersion(gitOutput)
-    def commits = getCommits(gitOutput)
-
-    return Version.parse("${baseVersion}-${pluginConfig.alphaLabel}.${commits}").incrementMinor(true)
-  }
-
-  protected String sanitizeGitOutput(String gitOutput) {
-    if ("".equals(gitOutput)) {
-      log.error("Compliance error - Unable to determine develop version as git describe did not return expected value")
-      throw new NonComplianceException("Unable to determine develop version as git describe did not return expected value")
-    }
-
-    if (gitOutput.endsWith("-dirty")) {
-      // Strip off the dirty indicator
-      gitOutput = gitOutput.substring(0, gitOutput.length() - "-dirty".length())
-    }
-
-    return gitOutput
-  }
-
-  protected String getBaseVersion(gitOutput) {
-    return (gitOutput =~ /-[0-9]+-g[0-9a-f]+$/).replaceFirst("")
-  }
-
-  protected String getCommits(gitOutput) {
-    def gitSuffixMatcher = (gitOutput =~ /-([0-9]+)-g([0-9a-f]+)$/)
-    return Integer.parseInt(gitSuffixMatcher[0][1].toString())
+    Version version = super.resolve()
+    String uniqueBranchId = gitClient.getUniqueBranchId(gitClient.getBranchName())
+    version.setPreReleasePrefix("unknown-${uniqueBranchId}")
+    version.setPreRelease(gitClient.getCommitsSince("develop") + 1)
+    return version
   }
 }

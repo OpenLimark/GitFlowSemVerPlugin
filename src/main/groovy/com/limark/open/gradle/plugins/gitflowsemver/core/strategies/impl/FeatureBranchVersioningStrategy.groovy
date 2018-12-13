@@ -15,87 +15,41 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE                               *
  **********************************************************************************************************************/
 
-package com.limark.open.gradle.plugins.gitflowsemver.core
+package com.limark.open.gradle.plugins.gitflowsemver.core.strategies.impl
 
 import com.limark.open.gradle.plugins.gitflowsemver.config.PluginConfig
+import com.limark.open.gradle.plugins.gitflowsemver.core.GitClient
+import com.limark.open.gradle.plugins.gitflowsemver.core.exceptions.NonComplianceException
+import com.limark.open.gradle.plugins.gitflowsemver.core.model.Version
+import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.VersioningStrategy
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import java.nio.charset.StandardCharsets
 
-/**
- * Utility Methods for interacting with Git.
- */
-class GitClient {
+class FeatureBranchVersioningStrategy extends DevelopBranchVersioningStrategy {
 
   private static final Logger log = LoggerFactory.getLogger(this.getClass())
 
-  File projectDir = null
-  PluginConfig config = null
-
-  GitClient(File projectDir, PluginConfig config) {
-    this.projectDir = projectDir
-    this.config = config
-  }
-
-  /**
-   * Returns the name of the current branch, if one exists. Otherwise returns an empty String.
-   * @param projectDir
-   * @return
-   */
-  String getBranchName() {
-
-    def gitBranch = execAndGet("git rev-parse --abbrev-ref HEAD")
-
-    // Note: HEAD is returned when we are not in a branch
-    if (!"HEAD".equals(gitBranch)) {
-      return gitBranch
-    } else {
-      return ""
-    }
-  }
-
-  String describeExactMatch() {
-    return execAndGet("git describe --exact-match --match ${config.gitDescribeMatchRule}")
+  FeatureBranchVersioningStrategy(GitClient gitClient, PluginConfig pluginConfig) {
+    super(gitClient, pluginConfig)
   }
 
 
-  String describeDirtyMatch() {
-    return execAndGet("git describe --dirty --abbrev=7 --match ${config.gitDescribeMatchRule}")
+  @Override
+  boolean supports(String branch) {
+    return branch.startsWith("feature/")
   }
 
-  int getCommitsSince(String branch) {
-    def countStr = execAndGet("git rev-list --count ${branch}..HEAD")
-    if (countStr.length() > 0) {
-      return Integer.parseInt(countStr)
-    }
-    return 0
+  @Override
+  Version resolve() {
+    Version version = super.resolve()
+    String uniqueBranchId = gitClient.getUniqueBranchId(gitClient.getBranchName().substring("feature/".length()))
+    version.setPreReleasePrefix("feat-${uniqueBranchId}")
+    version.setPreRelease(gitClient.getCommitsSince("develop") + 1)
+    return version
   }
 
-  String getUniqueBranchId(String branch) {
-    byte[] rawBytes = branch.getBytes(StandardCharsets.UTF_8)
-    return new BigInteger(1, rawBytes).toString(36)
-  }
 
-  String getShortMergeBase(String branch, String baseBranch) {
-    String sha = execAndGet("git merge-base ${baseBranch} ${branch}")
-    return sha.length() > 0 ? sha.substring(0, 7) : "unknown"
-  }
 
-  private String execAndGet(String command, failOnError = false) {
-    def process = (command).execute(null, projectDir)
-    process.waitFor()
-    if (process.exitValue() == 0) {
-      return process.text.trim()
-    } else {
-      if (failOnError) {
-        throw new IllegalStateException("Execution of command ${command} failed with a " +
-            "non-zero exit value: ${process.exitValue()}")
-      } else {
-        log.debug("Process ${command} returned non-zero exit value ${process.exitValue()}. " +
-            "Returning empty String as result since failOnError=false")
-        return ""
-      }
-    }
-  }
 }
