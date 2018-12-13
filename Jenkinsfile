@@ -32,8 +32,10 @@ pipeline {
     }
 
     stage('Confirm-Publish') {
-      timeout(time:5, unit:'DAYS') {
-        input message:'Publish plugin?'
+      steps {
+        timeout(time: 5, unit: 'DAYS') {
+          input message: 'Publish plugin?'
+        }
       }
     }
 
