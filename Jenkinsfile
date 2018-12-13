@@ -17,7 +17,7 @@
 
 pipeline {
 
-  agent none
+  agent any
 
   environment {
     GRADLE_CREDS = credentials('gradle-credentials')
