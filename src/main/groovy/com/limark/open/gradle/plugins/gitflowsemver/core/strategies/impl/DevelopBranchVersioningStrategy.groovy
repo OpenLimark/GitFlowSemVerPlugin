@@ -29,8 +29,8 @@ class DevelopBranchVersioningStrategy implements VersioningStrategy {
 
   private static final Logger log = LoggerFactory.getLogger(this.getClass())
 
-  private GitClient gitClient
-  private PluginConfig pluginConfig
+  GitClient gitClient
+  PluginConfig pluginConfig
 
   DevelopBranchVersioningStrategy(GitClient gitClient, PluginConfig pluginConfig) {
     this.gitClient = gitClient
@@ -45,8 +45,16 @@ class DevelopBranchVersioningStrategy implements VersioningStrategy {
 
   @Override
   Version resolve() {
-    def gitOutput = gitClient.describeDirtyMatch()
+    def gitOutput = sanitizeGitOutput(gitClient.describeDirtyMatch())
 
+
+    def baseVersion = getBaseVersion(gitOutput)
+    def commits = getCommits(gitOutput)
+
+    return Version.parse("${baseVersion}-${pluginConfig.alphaLabel}.${commits}").incrementMinor(true)
+  }
+
+  protected String sanitizeGitOutput(String gitOutput) {
     if ("".equals(gitOutput)) {
       log.error("Compliance error - Unable to determine develop version as git describe did not return expected value")
       throw new NonComplianceException("Unable to determine develop version as git describe did not return expected value")
@@ -57,13 +65,15 @@ class DevelopBranchVersioningStrategy implements VersioningStrategy {
       gitOutput = gitOutput.substring(0, gitOutput.length() - "-dirty".length())
     }
 
-    def baseVersion = (gitOutput =~ /-[0-9]+-g[0-9a-f]+$/).replaceFirst("")
+    return gitOutput
+  }
 
-    // We get the commit count in the develop branch to figure out the pre-release number
+  protected String getBaseVersion(gitOutput) {
+    return (gitOutput =~ /-[0-9]+-g[0-9a-f]+$/).replaceFirst("")
+  }
+
+  protected String getCommits(gitOutput) {
     def gitSuffixMatcher = (gitOutput =~ /-([0-9]+)-g([0-9a-f]+)$/)
-    def commits = Integer.parseInt(gitSuffixMatcher[0][1].toString())
-
-    return Version.parse("${baseVersion}-${pluginConfig.alphaLabel}.${commits}")
-        .incrementMinor(true)
+    return Integer.parseInt(gitSuffixMatcher[0][1].toString())
   }
 }

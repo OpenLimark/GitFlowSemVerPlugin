@@ -39,7 +39,9 @@ Based on the GitFlow model,  versioning is done as follows.
 
 ### Feature / Bug Fix / Etc
 
- - These branches will not yield deployment versions in most cases, so we do not support versioning for these branches as of now.
+ - The pre-release version tag will be `feat`,`bugfix` or `unknown` in all other cases.
+ - This will be suffixed with a unique branch identifier that will be calculated based on the branch name (ex. `l3jpwte7ehbenbh8lteyrn8`).
+ - 
 
 ## How To Use This Plugin
 

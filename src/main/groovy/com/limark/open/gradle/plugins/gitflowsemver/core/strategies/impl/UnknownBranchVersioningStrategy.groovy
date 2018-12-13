@@ -15,43 +15,39 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE                               *
  **********************************************************************************************************************/
 
-plugins {
-  id 'groovy'
-  id 'java-gradle-plugin'
-  id 'com.gradle.plugin-publish' version '0.10.0'
-}
+package com.limark.open.gradle.plugins.gitflowsemver.core.strategies.impl
 
-group = "com.limark.open.gradle.plugins"
+import com.limark.open.gradle.plugins.gitflowsemver.config.PluginConfig
+import com.limark.open.gradle.plugins.gitflowsemver.core.GitClient
+import com.limark.open.gradle.plugins.gitflowsemver.core.exceptions.NonComplianceException
+import com.limark.open.gradle.plugins.gitflowsemver.core.model.Version
+import com.limark.open.gradle.plugins.gitflowsemver.core.strategies.VersioningStrategy
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-// Dog Fooding - We use the plugin to manage itself
-apply plugin: new GroovyScriptEngine(
-    [
-        file('src/main/groovy').absolutePath, 
-        file('src/main/resources').absolutePath
-    ].toArray(new String[2]),
-    this.class.classLoader
-).loadScriptByName('com/limark/open/gradle/plugins/gitflowsemver/GitFlowSemVerPlugin.groovy')
+/**
+ * Versioning strategy for unknown branches.
+ */
+class UnknownBranchVersioningStrategy extends DevelopBranchVersioningStrategy {
 
-dependencies {
-  implementation gradleApi()
-  implementation localGroovy()
-}
+  private static final Logger log = LoggerFactory.getLogger(this.getClass())
 
-jar {
-  baseName = "gitflow-semver"
-}
+  UnknownBranchVersioningStrategy(GitClient gitClient, PluginConfig pluginConfig) {
+    super(gitClient, pluginConfig)
+  }
 
-pluginBundle {
-  website = 'https://github.com/OpenLimark/GitFlowSemVerPlugin'
-  vcsUrl = 'https://github.com/OpenLimark/GitFlowSemVerPlugin'
-  tags = ['semver', 'gitflow','limark']
 
-  plugins {
-    gitFlowSemverPlugin {
-      id = 'com.limark.gitflowsemver'
-      displayName = 'GitFlow SemVer 2.0 Plugin'
-      description = "An opionionated GitFlow SemVer 2.0 versioning plugin that resolves project vesion based on Git Tags and conventions."
-      tags = ['semver', 'gitflow', 'limark']
-    }
+  @Override
+  boolean supports(String branch) {
+    return true
+  }
+
+  @Override
+  Version resolve() {
+    Version version = super.resolve()
+    String uniqueBranchId = gitClient.getUniqueBranchId(gitClient.getBranchName())
+    version.setPreReleasePrefix("unknown-${uniqueBranchId}")
+    version.setPreRelease(gitClient.getCommitsSince("develop") + 1)
+    return version
   }
 }
