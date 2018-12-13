@@ -38,10 +38,12 @@ Based on the GitFlow model,  versioning is done as follows.
  - Following the above example of last release version `1.2.5`, if we have 4 commits made on the development branch since then, our effective version would be `1.3.0-alpha.5`.
 
 ### Feature / Bug Fix / Etc
-
- - The pre-release version tag will be `feat`,`bugfix` or `unknown` in all other cases.
- - This will be suffixed with a unique branch identifier that will be calculated based on the branch name (ex. `l3jpwte7ehbenbh8lteyrn8`).
- - 
+In most cases, these branches will not be deployed as is except for local testing. However calculating the unique version of such branches is not straight forward. As a work-around to this, this plugin relies on a calculated unique branch identifier that is SemVer safe. The versioning strategy in this case would be,
+- The base version will be calculated as same as the `develop` branch.
+- The pre-release version tag will be `feat`,`bugfix` or `unknown` in all other cases.  
+- This will be suffixed with a unique branch identifier that will be calculated based on the branch name (ex. `l3jpwte7ehbenbh8lteyrn8`).
+- After the branch id, an integer will indicate the number of commits made to the branch since develop branch. 
+- Ex. `0.2.0-feat-l3jpwte7ehbenbh8lteyrn8.1`
 
 ## How To Use This Plugin
 
