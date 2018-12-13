@@ -47,7 +47,6 @@ pipeline {
         }
       }
       steps {
-        milestone()
         sh "./gradlew --no-daemon publishPlugins -Pgradle.publish.key=$GRADLE_CREDS_USR -Pgradle.publish.secret=$GRADLE_CREDS_PSW"
       }
     }
