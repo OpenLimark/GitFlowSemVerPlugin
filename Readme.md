@@ -1,6 +1,8 @@
 # GitFlow SemVer Gradle Plugin
+![Build Status](https://ci.limarktech.com/buildStatus/icon?job=GitFlowSemVerPlugin/develop)
 
 This is an opinionated Gradle plugin that enables Semantic Versioning (2.0) for projects that follow GitFlow branching model. With this plugin, you can do semantic versioning for your Gradle projects with minimum configuration, as it uses an opinionated versioning model. This plugin uses Git Tags to track the version numbers, so it does not require maintaining separate files.
+
 
 ## Versioning Model
 
@@ -83,3 +85,21 @@ Above configuration does the following changes,
 * Instead of the `rc` identifier for release versions / hotfix versions, plugin will use `beta`.
 * The `gitDescribeMatchRule` allows you to customize how a release tag will be identified.
 * Using the `propertiesFile`, you can change the location where the `version.properties` file will be created. By default, it gets written to `${project.buildDir}/version.properties`. In the above example, it is changed to be inside the `META-INF` directory.
+
+## Integrations / Compatibility
+
+### GitFlow AVH 
+
+This plugin is fully compatible and tested with [GitFlow AVH Plugin](https://github.com/petervanderdoes/gitflow-avh) for the standard GitFlow branches. 
+
+Currently, this plugin does not recognise `support` branches supported by the AVH Plugin. Support branches are not a branch type from the original GitFlow spec. This plugin may be extended to recognize `support` branches in a future release, if there's a demand for that.
+
+### Jenkins
+
+Please note that since v3.4.0 of Jenkins Git Plugin, the default SCM checkout of Jenkins will not fetch the tags (see [JENKINS-45164](https://issues.jenkins-ci.org/browse/JENKINS-45164) for more details). However, this plugin relies on tags being present so that we can track the last released version.  To address this issue, you need to configure your Jenkins jobs to fetch the tags when SCM checkout happens.  Below steps are for configuring a Jenkins multi-branch declarative pipelines project. Similar steps can be taken for other project types as well. 
+
+ 1. Go to your project configuration page in Jenkins. 
+ 2. Under 'Branch Sources', you should see a section called 'Behaviors'. Under this section, click 'Add' button and select 'Advance Clone Behaviors'. 
+ 3. If 'Fetch Tags' is not selected, select it. As of current version, when you add 'Advance Clone Behaviors', this automatically gets checked.
+
+Once above configuration change is done, Jenkins will fetch the tags during SCM checkout.
