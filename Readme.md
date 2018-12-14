@@ -1,6 +1,8 @@
 # GitFlow SemVer Gradle Plugin
+![Build Status](https://ci.limarktech.com/buildStatus/icon?job=GitFlowSemVerPlugin/develop)
 
 This is an opinionated Gradle plugin that enables Semantic Versioning (2.0) for projects that follow GitFlow branching model. With this plugin, you can do semantic versioning for your Gradle projects with minimum configuration, as it uses an opinionated versioning model. This plugin uses Git Tags to track the version numbers, so it does not require maintaining separate files.
+
 
 ## Versioning Model
 
