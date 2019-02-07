@@ -37,14 +37,19 @@ class GitFlowSemVerPlugin implements Plugin<Project> {
   void apply(Project project) {
 
     def config = initConfig(project)
-    def gitClient = new GitClient(project.projectDir, config)
+    def gitClient
 
-    def version = new Versioner(gitClient, config).resolve()
+    def version
 
-    log.info("Resolved version: $version")
+    project.afterEvaluate {
+      gitClient = new GitClient(project.projectDir, config)
+      version = new Versioner(gitClient, config).resolve()
 
-    // Update Project Version
-    project.version = version.toString()
+      log.info("Resolved version: $version")
+
+      // Update Project Version
+      project.version = version.toString()
+    }
 
     // Add Tasks
     project.tasks.create('printVersion') {
