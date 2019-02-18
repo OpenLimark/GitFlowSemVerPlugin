@@ -74,6 +74,6 @@ class DevelopBranchVersioningStrategy implements VersioningStrategy {
 
   protected String getCommits(gitOutput) {
     def gitSuffixMatcher = (gitOutput =~ /-([0-9]+)-g([0-9a-f]+)$/)
-    return Integer.parseInt(gitSuffixMatcher[0][1].toString())
+    return gitSuffixMatcher.find() ? Integer.parseInt(gitSuffixMatcher[0][1].toString()) : "1"
   }
 }
