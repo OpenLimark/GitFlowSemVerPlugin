@@ -58,7 +58,7 @@ In most cases, these branches will not be deployed as is except for local testin
  1. Refer to the plugin in the `plugins` section of the Gradle build script as follows. 
 ```
 plugins {     
-  id 'com.limark.gitflowsemver' version '0.1.0'   
+  id 'com.limark.gitflowsemver' version '0.3.1'   
 }
 ```
  2. That's it! When you run the next build, it will determine the next version automatically based on the versioning model outlined above and the plugin will update the `project.version` property in the Gradle script.
