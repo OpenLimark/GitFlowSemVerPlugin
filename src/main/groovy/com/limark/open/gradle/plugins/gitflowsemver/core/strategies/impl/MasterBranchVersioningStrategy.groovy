@@ -37,7 +37,7 @@ class MasterBranchVersioningStrategy implements VersioningStrategy {
 
   @Override
   boolean supports(String branch) {
-    return "master" == branch
+    return "master" == branch || gitClient.describeExactMatch().length() > 0
   }
 
   @Override
